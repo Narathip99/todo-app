@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
 import { TodoContext } from "../context/todoContext";
+import { ThemeContext } from "../context/themeContex";
 import { TodoCard } from "../components/TodoCard";
 
 export const Todos = () => {
   // Define state
   const { todos, completedTodo, deleteTodo, clearCompleted } = useContext(TodoContext);
+  const { theme } = useContext(ThemeContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentFilter, setCurrentFilter] = useState("All");
   const todosPerPage = 5;
@@ -49,13 +51,22 @@ export const Todos = () => {
     setCurrentPage(1); // Reset page to 1 when changing the filter
   };
 
+  const textTheme = theme === "light" 
+    ? "text-gray-600 transition duration-300" 
+    : "text-white transition duration-300"
+
   return (
-    <div className="bg-white rounded-md">
+    <div className={`
+    ${theme === "light" 
+      ? "bg-white transition duration-300"
+      : "bg-gray-700 transition duration-300"
+    } rounded-md shadow-lg`
+    }>
       {/* ToolBar */}
       <div className="flex justify-between items-center p-4">
         {/* Number of item */}
         <div>
-          <p className="text-gray-500">
+          <p className={textTheme}>
             <span className="text-lg">{filteredTodos.length}</span>
             <span>{`${filteredTodos.length !== 1 ? " items" : ""} left`}</span>
           </p>
@@ -63,19 +74,19 @@ export const Todos = () => {
         {/* Filter ToolBar */}
         <div className="md:flex hidden">
           <p 
-            className={`px-2 ${currentFilter === "All" ? "font-bold" : ""}`} 
+            className={`px-2 ${textTheme} ${currentFilter === "All" ? "font-bold" : ""}`} 
             onClick={() => handleFilterChange("All")}
           >
             All
           </p>
           <p 
-            className={`px-2 ${currentFilter === "Active" ? "font-bold" : ""}`} 
+            className={`px-2 ${textTheme} ${currentFilter === "Active" ? "font-bold" : ""}`} 
             onClick={() => handleFilterChange("Active")}
           >
             Active
           </p>
           <p 
-            className={`px-2 ${currentFilter === "Completed" ? "font-bold" : ""}`} 
+            className={`px-2 ${textTheme} ${currentFilter === "Completed" ? "font-bold" : ""}`} 
             onClick={() => handleFilterChange("Completed")}
           >
             Completed
@@ -85,13 +96,13 @@ export const Todos = () => {
         <button
           onClick={() => {
             const isConfirm = window.confirm(
-              "Are you sure you want to clear completed?"
+              "Are you sure!!! you want to clear completed?"
             )
             if (isConfirm) {
               clearCompleted();
             }
           }}
-          className="text-gray-500 hover:text-red-500"
+          className={`${textTheme} hover:text-red-500`}
         >
           Clear Completed
         </button>
@@ -103,12 +114,13 @@ export const Todos = () => {
           todo={todo}
           completedTodo={completedTodo}
           deleteTodo={deleteTodo}
+          theme={theme}
         />
       ))}
-      <hr className="border-t-2" />
+      <hr className={theme === "light" ? "border-t-2 transition duration-300" : "border-t-2 border-gray-800 transition duration-300"} />
       {/* Pagination */}
       <div className="flex justify-center py-2">
-        <a className="px-2" 
+        <a className={`${textTheme} px-2 cursor-pointer font-bold`}  
           onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
         >
           &lt;
@@ -120,7 +132,7 @@ export const Todos = () => {
             <span
               key={page}
               onClick={() => handlePageChange(page)}
-              className={`cursor-pointer px-2 ${
+              className={`${textTheme} cursor-pointer px-2 ${
                 currentPage === page ? "font-bold" : ""
               }`}
             >
@@ -128,7 +140,7 @@ export const Todos = () => {
             </span>
           ))
         }
-        <a className="px-2" 
+        <a className={`${textTheme} px-2 cursor-pointer font-bold`} 
           onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
         >
           &gt;

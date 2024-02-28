@@ -18,6 +18,7 @@ const TodoContextProvider = ({ children }) => {
       const newTodo = {
         id: todos.length + 1,
         title: todo.title,
+        desc: todo.desc,
         status: false,
       };
       setTodos([...todos, newTodo]);
